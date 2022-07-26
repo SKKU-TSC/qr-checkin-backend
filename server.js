@@ -2,19 +2,48 @@ const express = require('express');
 const http = require('http');
 
 const app = express();
+const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
+const session = require('express-session');
 const dotenv = require('dotenv');
 const passport = require('passport');
+const passportConfig = require('./passport');
 const User = require('./models/user');
+const { sequelize } = require('./models');
 
 const port = process.env.PORT || 3000;
 
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log('데이터베이스 연결 성공');
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+
 //써드파티 미들웨어 설정
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+    },
+    name: 'connect.sid',
+  })
+);
 app.use(express.json());
 dotenv.config();
-app.use(passport.initilaize());
+passportConfig();
+app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.urlencoded({ extended: false })); // 데이터타입 multipart/form-data - req.body 사용 가능
+app.use(cookieParser(process.env.COOKIE_SECRET));
 
+//App
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });

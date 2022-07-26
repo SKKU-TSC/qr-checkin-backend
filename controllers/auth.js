@@ -4,7 +4,7 @@ const User = require('../models/user');
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.findAll();
     res.status(200).json({ status: 'success', data: { users } });
   } catch (error) {
     res.status(400).json({ status: 'fail', message: error });
@@ -35,14 +35,20 @@ const register = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
+    if (req.params.id === req.user.dataValues.studentId)
+      res
+        .status(400)
+        .json({ status: 'fail', message: "can't update yourself" });
     const user = await User.findOne({ where: { studentId: req.params.id } });
     if (!user)
       res.status(404).json({ status: 'fail', message: 'user not found' });
     if (req.body.password) {
       req.body.password = await bcrypt.hash(req.body.password, 12);
     }
-    const updatedUser = await user.upsert(req.body);
-    res.status(200).json({ status: 'success', data: { updatedUser } });
+    const updatedUser = await User.update(req.body, {
+      where: { studentId: req.params.id },
+    });
+    res.status(200).json({ status: 'success', message: updatedUser });
   } catch (error) {
     res.status(400).json({ status: 'fail', error });
   }
