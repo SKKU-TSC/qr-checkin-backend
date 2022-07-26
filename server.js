@@ -5,6 +5,7 @@ const app = express();
 const { Server } = require('socket.io');
 const dotenv = require('dotenv');
 const passport = require('passport');
+const User = require('./models/user');
 
 const port = process.env.PORT || 3000;
 
@@ -25,20 +26,16 @@ app.listen(port, () => {
 //라우팅
 const authRouter = require('./routes/auth');
 
-const adminRouter = require('./routes/admin');
-
-const clientRouter = require('./routes/client');
-
 app.use('/auth', authRouter);
-app.use('/admin', adminRouter);
-app.use('/client', clientRouter);
 
 //웹소켓 서버 연결 부분
 const httpServer = http.createServer(app);
 const wsServer = new Server(httpServer);
 
-//브라우저가 1개만 있으면 되므로 모든 sockets으로 정보를 뿌릴 필요는 없음.
+//웹소켓 구현
 wsServer.on('connection', (socket) => {
-  console.log(wsServer.sockets.length);
-  console.log(socket);
+  socket.on('display', async (studentId) => {
+    const user = await User.findOne({ where: { studentId: studentId } });
+    wsServer.sockets.emit('display', user);
+  });
 });
