@@ -3,10 +3,14 @@ const http = require('http');
 const app = express();
 const { Server } = require('socket.io');
 const dotenv = require('dotenv');
+const passport = require('passport');
 const port = process.env.PORT || 3000;
 
+//써드파티 미들웨어 설정
 app.use(express.json());
 dotenv.config();
+app.use(passport.initilaize());
+app.use(passport.session());
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
