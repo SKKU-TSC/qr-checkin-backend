@@ -5,7 +5,7 @@ const isAdmin = async (req, res, next) => {
       res
         .status(403)
         .json({ status: 'fail', message: 'Normal user not allowed' });
-    next();
+    else next();
   } catch (error) {
     res.status(400).json({ status: 'fail', message: '응애' });
   }
