@@ -12,20 +12,26 @@ const passportConfig = require('./passport');
 const User = require('./models/user');
 const { sequelize } = require('./models');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 //CORS
-const whiteList = ['http://localhost:3000'];
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (whiteList.indexOf(origin) !== -1) {
-      callback(null, true); //cors허용
-    } else {
-      callback(new Error('Not allowed Origin')); //cors 비허용
-    }
-  },
-};
-app.use(cors(corsOptions));
+// const whiteList = ['http://localhost:3000'];
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     if (whiteList.indexOf(origin) !== -1) {
+//       callback(null, true); //cors허용
+//     } else {
+//       callback(new Error('Not allowed Origin')); //cors 비허용
+//     }
+//   },
+// };
+// app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: true, // 출처 허용 옵션
+    credential: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
+  })
+);
 
 //데이터베이스 연결
 sequelize
