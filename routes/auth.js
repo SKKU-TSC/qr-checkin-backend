@@ -7,6 +7,7 @@ const {
   logout,
   updateUser,
   getUsers,
+  verify,
 } = require('../controllers/auth');
 
 const router = express.Router();
@@ -20,5 +21,7 @@ router.post('/logout', isLoggedIn, logout);
 router.patch('/:id', isLoggedIn, isAdmin, updateUser);
 
 router.get('', isLoggedIn, isAdmin, getUsers);
+
+router.get('/verify', isLoggedIn, verify);
 
 module.exports = router;

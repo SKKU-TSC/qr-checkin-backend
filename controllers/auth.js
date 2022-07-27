@@ -72,4 +72,16 @@ const logout = (req, res) => {
   });
 };
 
-module.exports = { getUsers, register, updateUser, login, logout };
+const verify = (req, res) =>
+  res
+    .status(200)
+    .json({ status: 'success', data: { role: req.user.dataValues.role } });
+
+module.exports = {
+  getUsers,
+  register,
+  updateUser,
+  login,
+  logout,
+  verify,
+};
