@@ -7,12 +7,27 @@ const { Server } = require('socket.io');
 const session = require('express-session');
 const dotenv = require('dotenv');
 const passport = require('passport');
+const cors = require('cors');
 const passportConfig = require('./passport');
 const User = require('./models/user');
 const { sequelize } = require('./models');
 
 const port = process.env.PORT || 3000;
 
+//CORS
+const whiteList = ['http://localhost:3000'];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whiteList.indexOf(origin) !== -1) {
+      callback(null, true); //cors허용
+    } else {
+      callback(new Error('Not allowed Origin')); //cors 비허용
+    }
+  },
+};
+app.use(cors(corsOptions));
+
+//데이터베이스 연결
 sequelize
   .sync({ force: false })
   .then(() => {
