@@ -34,7 +34,7 @@ class User extends Sequelize.Model {
           type: Sequelize.DataTypes.STRING,
           allowNull: false,
           validate: {
-            isin: [['client', 'admin']],
+            isIn: [['client', 'admin']],
           },
         },
       },

@@ -2,18 +2,48 @@ const express = require('express');
 const http = require('http');
 
 const app = express();
+const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
+const session = require('express-session');
 const dotenv = require('dotenv');
 const passport = require('passport');
+const passportConfig = require('./passport');
+const User = require('./models/user');
+const { sequelize } = require('./models');
 
 const port = process.env.PORT || 3000;
 
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log('데이터베이스 연결 성공');
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+
 //써드파티 미들웨어 설정
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+    },
+    name: 'connect.sid',
+  })
+);
 app.use(express.json());
 dotenv.config();
-app.use(passport.initilaize());
+passportConfig();
+app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.urlencoded({ extended: false })); // 데이터타입 multipart/form-data - req.body 사용 가능
+app.use(cookieParser(process.env.COOKIE_SECRET));
 
+//App
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
@@ -25,20 +55,16 @@ app.listen(port, () => {
 //라우팅
 const authRouter = require('./routes/auth');
 
-const adminRouter = require('./routes/admin');
-
-const clientRouter = require('./routes/client');
-
 app.use('/auth', authRouter);
-app.use('/admin', adminRouter);
-app.use('/client', clientRouter);
 
 //웹소켓 서버 연결 부분
 const httpServer = http.createServer(app);
 const wsServer = new Server(httpServer);
 
-//브라우저가 1개만 있으면 되므로 모든 sockets으로 정보를 뿌릴 필요는 없음.
+//웹소켓 구현
 wsServer.on('connection', (socket) => {
-  console.log(wsServer.sockets.length);
-  console.log(socket);
+  socket.on('display', async (studentId) => {
+    const user = await User.findOne({ where: { studentId: studentId } });
+    wsServer.sockets.emit('display', user);
+  });
 });
