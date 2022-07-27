@@ -93,14 +93,35 @@ const authRouter = require('./routes/auth');
 
 app.use('/auth', authRouter);
 
-//웹소켓 서버 연결 부분
-const httpServer = http.createServer(app);
-const wsServer = new Server(httpServer);
+// //웹소켓 서버 연결 부분
+// const httpServer = http.createServer(app);
+// const wsServer = new Server(httpServer);
 
-//웹소켓 구현
-wsServer.on('connection', (socket) => {
+// //웹소켓 구현
+// wsServer.on('connection', (socket) => {
+//   socket.on('display', async (studentId) => {
+//     const user = await User.findOne({ where: { studentId: studentId } });
+//     wsServer.sockets.emit('display', user);
+//   });
+// });
+
+// 웹소켓 강동헌
+
+const httpServer = http.createServer();
+const io = new Server(httpServer, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET'],
+    allowedHeaders: ['my-custom-header'],
+    credentials: true,
+  },
+});
+
+io.on('connection', (socket) => {
   socket.on('display', async (studentId) => {
     const user = await User.findOne({ where: { studentId: studentId } });
-    wsServer.sockets.emit('display', user);
+    io.sockets.emit('display', user);
   });
 });
+
+httpServer.listen(8001);
