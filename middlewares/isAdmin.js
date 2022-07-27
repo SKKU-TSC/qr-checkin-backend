@@ -7,7 +7,9 @@ const isAdmin = async (req, res, next) => {
         .json({ status: 'fail', message: 'Normal user not allowed' });
     else next();
   } catch (error) {
-    res.status(400).json({ status: 'fail', message: '응애' });
+    res
+      .status(400)
+      .json({ status: 'fail', message: 'couldnt pass admin middleware' });
   }
 };
 
