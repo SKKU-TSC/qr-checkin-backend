@@ -3,11 +3,14 @@ const http = require('http');
 
 const app = express();
 const cookieParser = require('cookie-parser');
+
 const { Server } = require('socket.io');
 const session = require('express-session');
 const dotenv = require('dotenv');
 const passport = require('passport');
 const cors = require('cors');
+const helmet = require('helmet');
+const hpp = require('hpp');
 const passportConfig = require('./passport');
 const User = require('./models/user');
 const { sequelize } = require('./models');
@@ -44,25 +47,37 @@ sequelize
   });
 
 //써드파티 미들웨어 설정
-app.use(
-  session({
-    resave: false,
-    saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-    },
-    name: 'connect.sid',
-  })
-);
+const sessionOption = {
+  resave: false,
+  saveUninitialized: false,
+  secret: process.env.COOKIE_SECRET,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  },
+};
+
+// if (process.env.NODE_ENV === 'production') {
+//   //proxy 적용시
+//   sessionOption.proxy = true;
+//   //https 적용시
+//   sessionOption.cookie.secure = true;
+// }
+app.use(session(sessionOption));
 app.use(express.json());
+
 dotenv.config();
 passportConfig();
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false })); // 데이터타입 multipart/form-data - req.body 사용 가능
 app.use(cookieParser(process.env.COOKIE_SECRET));
+
+if (process.env.NODE_ENV === 'production') {
+  app.enable('trust proxy'); //proxy적용시
+  app.use(helmet({ contentSecurityPolicy: false })); //요청응답 관련 보안
+  app.use(hpp());
+}
 
 //App
 app.get('/', (req, res) => {
