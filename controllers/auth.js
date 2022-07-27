@@ -17,17 +17,10 @@ const register = async (req, res) => {
     const exUser = await User.findOne({
       where: { studentId: req.body.studentId },
     });
-    if (exUser)
+    if (exUser) {
       res.status(400).json({ status: 'fail', message: 'existing user' });
-    const hash = await bcrypt.hash(req.body.password, 12);
-    const user = await User.create({
-      ...req.body,
-      password: hash,
-    });
-    res.status(200).json({
-      status: 'success',
-      data: { user },
-    });
+      return;
+    }
   } catch (error) {
     res.status(400).json({ status: 'fail', error: error });
   }
@@ -35,13 +28,17 @@ const register = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    if (req.params.id === req.user.dataValues.studentId)
+    if (req.params.id === req.user.dataValues.studentId) {
       res
         .status(400)
         .json({ status: 'fail', message: "can't update yourself" });
+      return;
+    }
     const user = await User.findOne({ where: { studentId: req.params.id } });
-    if (!user)
+    if (!user) {
       res.status(404).json({ status: 'fail', message: 'user not found' });
+      return;
+    }
     if (req.body.password) {
       req.body.password = await bcrypt.hash(req.body.password, 12);
     }
@@ -62,7 +59,8 @@ const login = (req, res, next) => {
     req.login(user, (loginError) => {
       if (loginError)
         res.status(400).json({ status: 'fail', message: loginError });
-      res.status(200).json({ status: 'success', message: 'Login Success' });
+      else
+        res.status(200).json({ status: 'success', message: 'Login Success' });
     });
   })(req, res, next);
 };
