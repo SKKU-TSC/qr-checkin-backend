@@ -119,8 +119,13 @@ const io = new Server(httpServer, {
 
 io.on('connection', (socket) => {
   socket.on('display', async (studentId) => {
-    const user = await User.findOne({ where: { studentId: studentId } });
-    io.sockets.emit('display', user);
+    const user = await User.update(
+      { isCheckedIn: true },
+      { where: { studentId: studentId, isCheckedIn: false } }
+    );
+    if (user) {
+      io.sockets.emit('display', user);
+    }
   });
 });
 
