@@ -18,14 +18,6 @@ class User extends Sequelize.Model {
           type: Sequelize.DataTypes.STRING,
           allowNull: false,
         },
-        major2: {
-          type: Sequelize.DataTypes.STRING,
-          allowNull: true,
-        },
-        major3: {
-          type: Sequelize.DataTypes.STRING,
-          allowNull: true,
-        },
         name: {
           type: Sequelize.DataTypes.STRING,
           allowNull: false,
@@ -35,6 +27,13 @@ class User extends Sequelize.Model {
           allowNull: false,
           validate: {
             isIn: [['client', 'admin']],
+          },
+        },
+        degree: {
+          type: Sequelize.DataTypes.STRING,
+          allowNull: false,
+          validate: {
+            isIn: [['학사', '석사', '박사', 'admin']],
           },
         },
       },
