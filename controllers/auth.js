@@ -21,6 +21,9 @@ const register = async (req, res) => {
       res.status(400).json({ status: 'fail', message: 'existing user' });
       return;
     }
+    req.body.password = await bcrypt.hash(req.body.password, 12);
+    const user = await User.create(req.body);
+    return res.status(200).json({ status: 'success', user });
   } catch (error) {
     res.status(400).json({ status: 'fail', error: error });
   }
@@ -45,7 +48,7 @@ const updateUser = async (req, res) => {
     const updatedUser = await User.update(req.body, {
       where: { studentId: req.params.id },
     });
-    res.status(200).json({ status: 'success', message: updatedUser });
+    res.status(200).json({ status: 'success', updatedUser });
   } catch (error) {
     res.status(400).json({ status: 'fail', error });
   }

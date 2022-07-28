@@ -1,3 +1,5 @@
+//이것은 그저 모델을 업데이트하기 위한 파일일 뿐입니다.
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.removeColumn('users', 'major2');
