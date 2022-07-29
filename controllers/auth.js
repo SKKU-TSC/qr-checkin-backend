@@ -80,6 +80,34 @@ const verify = (req, res) =>
     .status(200)
     .json({ status: 'success', data: { role: req.user.dataValues.role } });
 
+const resetCheckinOne = (req, res) => {
+  const studentId = req.params.id;
+  User.update({ isCheckedIn: false }, { where: { studentId: studentId } })
+    .then((data) => res.status(200).json({ status: 'success', data: { data } }))
+    .catch((err) =>
+      res.status(400).json({ status: 'fail', error: err.message })
+    );
+};
+
+const resetCheckinAll = (req, res) => {
+  User.findAll()
+    .then((users) =>
+      users.forEach((user) => {
+        user.set({ isCheckedIn: false });
+        user.save();
+      })
+    )
+    .then(() =>
+      res.status(200).json({
+        status: 'success',
+        message: '성공적으로 qrcheckin을 초기화했습니다.',
+      })
+    )
+    .catch((err) =>
+      res.status(400).json({ status: 'fail', error: err.message })
+    );
+};
+
 module.exports = {
   getUsers,
   register,
@@ -87,4 +115,6 @@ module.exports = {
   login,
   logout,
   verify,
+  resetCheckinOne,
+  resetCheckinAll,
 };

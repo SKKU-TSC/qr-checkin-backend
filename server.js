@@ -55,6 +55,7 @@ const sessionOption = {
     httpOnly: true,
     secure: false,
   },
+  credentials: 'include',
 };
 
 // if (process.env.NODE_ENV === 'production') {
