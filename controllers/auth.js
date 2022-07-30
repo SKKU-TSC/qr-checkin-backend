@@ -69,6 +69,7 @@ const login = (req, res, next) => {
 };
 
 const logout = (req, res) => {
+  console.log(req.session);
   req.logout((err) => {
     if (err) return res.status(400).json({ status: 'fail', message: err });
     res.status(200).json({ status: 'success', message: 'logout success' });

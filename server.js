@@ -8,7 +8,6 @@ const { Server } = require('socket.io');
 const session = require('express-session');
 const dotenv = require('dotenv');
 const passport = require('passport');
-const cors = require('cors');
 const helmet = require('helmet');
 const hpp = require('hpp');
 const passportConfig = require('./passport');
@@ -29,12 +28,6 @@ const port = process.env.PORT || 8000;
 //   },
 // };
 // app.use(cors(corsOptions));
-app.use(
-  cors({
-    origin: true, // 출처 허용 옵션
-    credential: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
-  })
-);
 
 //데이터베이스 연결
 sequelize
@@ -54,25 +47,21 @@ const sessionOption = {
   cookie: {
     httpOnly: true,
     secure: false,
+    maxAge: 60 * 60 * 24 * 1000,
   },
   credentials: 'include',
 };
 
-// if (process.env.NODE_ENV === 'production') {
-//   //proxy 적용시
-//   sessionOption.proxy = true;
-//   //https 적용시
-//   sessionOption.cookie.secure = true;
-// }
+app.use(express.urlencoded({ extended: false })); // 데이터타입 multipart/form-data - req.body 사용 가능
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session(sessionOption));
+
 app.use(express.json());
 
 dotenv.config();
 passportConfig();
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.urlencoded({ extended: false })); // 데이터타입 multipart/form-data - req.body 사용 가능
-app.use(cookieParser(process.env.COOKIE_SECRET));
 
 if (process.env.NODE_ENV === 'production') {
   app.enable('trust proxy'); //proxy적용시
@@ -93,6 +82,11 @@ app.listen(port, () => {
 const authRouter = require('./routes/auth');
 
 app.use('/auth', authRouter);
+
+//404
+app.all('*', (req, res, next) => {
+  res.status(404).json({ status: 'fail', message: '404 Not Found' });
+});
 
 // //웹소켓 서버 연결 부분
 // const httpServer = http.createServer(app);
