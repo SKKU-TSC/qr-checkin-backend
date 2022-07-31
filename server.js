@@ -11,7 +11,7 @@ const passport = require('passport');
 const helmet = require('helmet');
 const hpp = require('hpp');
 const passportConfig = require('./passport');
-const User = require('./models/user');
+
 const { sequelize } = require('./models');
 
 const port = process.env.PORT || 8000;
@@ -74,6 +74,22 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+// 웹소켓 강동헌
+
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET'],
+    allowedHeaders: ['my-custom-header'],
+    credentials: true,
+  },
+});
+
+const presentationSocket = require('./socket/presentationSocket');
+
+presentationSocket(io);
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
@@ -87,41 +103,3 @@ app.use('/auth', authRouter);
 app.all('*', (req, res, next) => {
   res.status(404).json({ status: 'fail', message: '404 Not Found' });
 });
-
-// //웹소켓 서버 연결 부분
-// const httpServer = http.createServer(app);
-// const wsServer = new Server(httpServer);
-
-// //웹소켓 구현
-// wsServer.on('connection', (socket) => {
-//   socket.on('display', async (studentId) => {
-//     const user = await User.findOne({ where: { studentId: studentId } });
-//     wsServer.sockets.emit('display', user);
-//   });
-// });
-
-// 웹소켓 강동헌
-
-const httpServer = http.createServer();
-const io = new Server(httpServer, {
-  cors: {
-    origin: 'http://localhost:3000',
-    methods: ['GET'],
-    allowedHeaders: ['my-custom-header'],
-    credentials: true,
-  },
-});
-
-io.on('connection', (socket) => {
-  socket.on('display', async (studentId) => {
-    const user = await User.update(
-      { isCheckedIn: true },
-      { where: { studentId: studentId, isCheckedIn: false } }
-    );
-    if (user) {
-      io.sockets.emit('display', user);
-    }
-  });
-});
-
-httpServer.listen(8000);
