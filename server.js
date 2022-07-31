@@ -74,10 +74,20 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+//라우팅
+const authRouter = require('./routes/auth');
+
+app.use('/auth', authRouter);
+
+//404
+app.all('*', (req, res, next) => {
+  res.status(404).json({ status: 'fail', message: '404 Not Found' });
+});
+
 // 웹소켓 강동헌
 
-const httpServer = http.createServer(app);
-const io = new Server(httpServer, {
+const server = http.createServer(app);
+const io = new Server(server, {
   cors: {
     origin: 'http://localhost:3000',
     methods: ['GET'],
@@ -90,16 +100,6 @@ const presentationSocket = require('./socket/presentationSocket');
 
 presentationSocket(io);
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
-});
-
-//라우팅
-const authRouter = require('./routes/auth');
-
-app.use('/auth', authRouter);
-
-//404
-app.all('*', (req, res, next) => {
-  res.status(404).json({ status: 'fail', message: '404 Not Found' });
 });
