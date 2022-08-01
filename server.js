@@ -64,6 +64,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 if (process.env.NODE_ENV === 'production') {
+  console.log('내가 범인이지롱');
   app.enable('trust proxy'); //proxy적용시
   app.use(helmet({ contentSecurityPolicy: false })); //요청응답 관련 보안
   app.use(hpp());
