@@ -92,7 +92,6 @@ const io = new Server(server, {
   cors: {
     origin: 'https://skku-qr.com',
     methods: ['GET'],
-    allowedHeaders: ['my-custom-header'],
     credentials: true,
   },
 });
