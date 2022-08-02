@@ -1,7 +1,6 @@
 const express = require('express');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const isAdmin = require('../middlewares/isAdmin');
-const csrfProtection = require('../middlewares/csrfProtection');
 const {
   register,
   login,
@@ -15,7 +14,7 @@ const {
 
 const router = express.Router();
 
-router.post('/register', isLoggedIn, isAdmin, csrfProtection, register);
+router.post('/register', isLoggedIn, isAdmin, register);
 
 router.post('/login', isNotLoggedIn, login);
 
@@ -23,7 +22,7 @@ router.post('/logout', isLoggedIn, logout);
 
 router.patch('/checkin', isLoggedIn, isAdmin, resetCheckinAll);
 
-router.patch('/:id', isLoggedIn, isAdmin, csrfProtection, updateUser);
+router.patch('/:id', isLoggedIn, isAdmin, updateUser);
 
 router.get('', isLoggedIn, isAdmin, getUsers);
 
