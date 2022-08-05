@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const isAdmin = require('../middlewares/isAdmin');
 const {
@@ -12,22 +13,37 @@ const {
   resetCheckinAll,
 } = require('../controllers/auth');
 
+const corsOptions = {
+  origin: 'http://localhost:3000',
+};
 const router = express.Router();
 
-router.post('/register', isLoggedIn, isAdmin, register);
+router.post('/register', cors(corsOptions), isLoggedIn, isAdmin, register);
 
-router.post('/login', isNotLoggedIn, login);
+router.post('/login', cors(corsOptions), isNotLoggedIn, login);
 
-router.post('/logout', isLoggedIn, logout);
+router.post('/logout', cors(corsOptions), isLoggedIn, logout);
 
-router.patch('/checkin', isLoggedIn, isAdmin, resetCheckinAll);
+router.patch(
+  '/checkin',
+  cors(corsOptions),
+  isLoggedIn,
+  isAdmin,
+  resetCheckinAll
+);
 
-router.patch('/:id', isLoggedIn, isAdmin, updateUser);
+router.patch('/:id', cors(corsOptions), isLoggedIn, isAdmin, updateUser);
 
-router.get('', isLoggedIn, isAdmin, getUsers);
+router.get('', cors(corsOptions), isLoggedIn, isAdmin, getUsers);
 
-router.get('/verify', isLoggedIn, verify);
+router.get('/verify', cors(corsOptions), isLoggedIn, verify);
 
-router.patch('/checkin/:id', isLoggedIn, isAdmin, resetCheckinOne);
+router.patch(
+  '/checkin/:id',
+  cors(corsOptions),
+  isLoggedIn,
+  isAdmin,
+  resetCheckinOne
+);
 
 module.exports = router;

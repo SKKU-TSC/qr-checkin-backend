@@ -10,24 +10,12 @@ const dotenv = require('dotenv');
 const passport = require('passport');
 const helmet = require('helmet');
 const hpp = require('hpp');
+const cors = require('cors');
 const passportConfig = require('./passport');
 
 const { sequelize } = require('./models');
 
 const port = process.env.PORT || 8000;
-
-//CORS
-// const whiteList = ['http://localhost:3000'];
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (whiteList.indexOf(origin) !== -1) {
-//       callback(null, true); //cors허용
-//     } else {
-//       callback(new Error('Not allowed Origin')); //cors 비허용
-//     }
-//   },
-// };
-// app.use(cors(corsOptions));
 
 //데이터베이스 연결
 sequelize
@@ -64,11 +52,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 if (process.env.NODE_ENV === 'production') {
-  console.log('내가 범인이지롱');
   app.enable('trust proxy'); //proxy적용시
   app.use(helmet({ contentSecurityPolicy: false })); //요청응답 관련 보안
   app.use(hpp());
 }
+
+//CORS
+const corsOptions = {
+  origin: 'http://localhot:8000',
+};
+
+app.use(cors(corsOptions));
 
 //App
 app.get('/', (req, res) => {

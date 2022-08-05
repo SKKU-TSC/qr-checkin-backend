@@ -11,6 +11,7 @@ const getUsers = async (req, res) => {
   }
 };
 
+//error next 에 넣기 제로초 강의 참고
 const register = async (req, res) => {
   try {
     //이미 해당 유저가 있으면 에러를 반환
@@ -75,10 +76,11 @@ const logout = (req, res) => {
   });
 };
 
-const verify = (req, res) =>
+const verify = (req, res) => {
   res
     .status(200)
     .json({ status: 'success', data: { role: req.user.dataValues.role } });
+};
 
 const resetCheckinOne = (req, res) => {
   const studentId = req.params.id;
