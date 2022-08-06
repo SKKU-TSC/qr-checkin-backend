@@ -74,10 +74,10 @@ const authRouter = require('./routes/auth');
 
 app.use('/auth', authRouter);
 
-//404
-app.all('*', (req, res, next) => {
-  res.status(404).json({ status: 'fail', message: '404 Not Found' });
-});
+// //404
+// app.all('*', (req, res, next) => {
+//   res.status(404).json({ status: 'fail', message: '404 Not Found' });
+// });
 
 // 웹소켓 강동헌
 
