@@ -59,7 +59,8 @@ if (process.env.NODE_ENV === 'production') {
 
 //CORS
 const corsOptions = {
-  origin: 'http://localhot:8000',
+  origin: 'http://localhost:3000',
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -74,10 +75,10 @@ const authRouter = require('./routes/auth');
 
 app.use('/auth', authRouter);
 
-// //404
-// app.all('*', (req, res, next) => {
-//   res.status(404).json({ status: 'fail', message: '404 Not Found' });
-// });
+//404
+app.all('*', (req, res, next) => {
+  res.status(404).json({ status: 'fail', message: '404 Not Found' });
+});
 
 // 웹소켓 강동헌
 
