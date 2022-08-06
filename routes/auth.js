@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const isAdmin = require('../middlewares/isAdmin');
 const {
