@@ -59,7 +59,11 @@ if (process.env.NODE_ENV === 'production') {
 
 //CORS
 const corsOptions = {
-  origin: 'http://localhot:8000',
+  origin:
+    process.env.NODE_ENV === 'production'
+      ? 'https://skku-qr.com'
+      : 'http://localhost:3000',
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -84,7 +88,10 @@ app.all('*', (req, res, next) => {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'https://skku-qr.com',
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? 'https://skku-qr.com'
+        : 'http://localhost:3000',
     methods: ['GET'],
     credentials: true,
   },
