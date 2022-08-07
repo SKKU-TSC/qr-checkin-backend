@@ -11,6 +11,17 @@ const getUsers = async (req, res) => {
   }
 };
 
+const getUser = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      where: { studentId: req.params.id },
+    });
+    res.status(200).json({ status: 'success', data: { user } });
+  } catch (error) {
+    res.status(400).json({ status: 'fail', message: error });
+  }
+};
+
 //error next 에 넣기 제로초 강의 참고
 const register = async (req, res) => {
   try {
@@ -112,6 +123,7 @@ const resetCheckinAll = (req, res) => {
 
 module.exports = {
   getUsers,
+  getUser,
   register,
   updateUser,
   login,

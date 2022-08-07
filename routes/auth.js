@@ -7,6 +7,7 @@ const {
   logout,
   updateUser,
   getUsers,
+  getUser,
   verify,
   resetCheckinOne,
   resetCheckinAll,
@@ -30,9 +31,11 @@ router.patch(
 
 router.patch('/:id', isLoggedIn, isAdmin, updateUser);
 
+router.get('/verify', isLoggedIn, verify);
+
 router.get('', isLoggedIn, isAdmin, getUsers);
 
-router.get('/verify', isLoggedIn, verify);
+router.get('/:id', isLoggedIn, isAdmin, getUser);
 
 router.patch(
   '/checkin/:id',
