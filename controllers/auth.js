@@ -88,9 +88,13 @@ const logout = (req, res) => {
 };
 
 const verify = (req, res) => {
-  res
-    .status(200)
-    .json({ status: 'success', data: { role: req.user.dataValues.role } });
+  res.status(200).json({
+    status: 'success',
+    data: {
+      role: req.user.dataValues.role,
+      studentId: req.user.dataValues.studentId,
+    },
+  });
 };
 
 const resetCheckinOne = (req, res) => {
