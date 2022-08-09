@@ -37,12 +37,6 @@ router.get('', isLoggedIn, isAdmin, getUsers);
 
 router.get('/:id', isLoggedIn, isAdmin, getUser);
 
-router.patch(
-  '/checkin/:id',
-
-  isLoggedIn,
-  isAdmin,
-  resetCheckinOne
-);
+router.patch('/checkin/:id', isLoggedIn, isAdmin, resetCheckinOne);
 
 module.exports = router;

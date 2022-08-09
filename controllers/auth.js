@@ -91,8 +91,7 @@ const verify = (req, res) => {
   res.status(200).json({
     status: 'success',
     data: {
-      role: req.user.dataValues.role,
-      studentId: req.user.dataValues.studentId,
+      user: req.user.dataValues,
     },
   });
 };
