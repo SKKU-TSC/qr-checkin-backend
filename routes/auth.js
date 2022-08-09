@@ -21,17 +21,11 @@ router.post('/login', login);
 
 router.post('/logout', isLoggedIn, logout);
 
-router.patch(
-  '/checkin',
-
-  isLoggedIn,
-  isAdmin,
-  resetCheckinAll
-);
+router.patch('/checkin', isLoggedIn, isAdmin, resetCheckinAll);
 
 router.patch('/:id', isLoggedIn, isAdmin, updateUser);
 
-router.get('/verify', isLoggedIn, verify);
+router.get('/verify', verify);
 
 router.get('', isLoggedIn, isAdmin, getUsers);
 

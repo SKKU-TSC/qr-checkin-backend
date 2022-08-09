@@ -88,17 +88,21 @@ const logout = (req, res) => {
 };
 
 const verify = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    data: {
-      studentId: req.user.dataValues.studentId,
-      major: req.user.dataValues.major,
-      name: req.user.dataValues.name,
-      role: req.user.dataValues.role,
-      degree: req.user.dataValues.degree,
-      isCheckedIn: req.user.dataValues.isCheckedIn,
-    },
-  });
+  try {
+    res.status(200).json({
+      status: 'success',
+      data: {
+        studentId: req.user.dataValues.studentId,
+        major: req.user.dataValues.major,
+        name: req.user.dataValues.name,
+        role: req.user.dataValues.role,
+        degree: req.user.dataValues.degree,
+        isCheckedIn: req.user.dataValues.isCheckedIn,
+      },
+    });
+  } catch (error) {
+    res.status(200).json({ status: 'fail', message: "User isn't logged in." });
+  }
 };
 
 const resetCheckinOne = (req, res) => {
