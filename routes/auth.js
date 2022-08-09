@@ -1,5 +1,5 @@
 const express = require('express');
-const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+const { isLoggedIn } = require('./middlewares');
 const isAdmin = require('../middlewares/isAdmin');
 const {
   register,
@@ -17,7 +17,7 @@ const router = express.Router();
 
 router.post('/register', isLoggedIn, isAdmin, register);
 
-router.post('/login', isNotLoggedIn, login);
+router.post('/login', login);
 
 router.post('/logout', isLoggedIn, logout);
 
