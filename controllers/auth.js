@@ -43,12 +43,6 @@ const register = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    if (req.params.id === req.user.dataValues.studentId) {
-      res
-        .status(400)
-        .json({ status: 'fail', message: "can't update yourself" });
-      return;
-    }
     const user = await User.findOne({ where: { studentId: req.params.id } });
     if (!user) {
       res.status(404).json({ status: 'fail', message: 'user not found' });
