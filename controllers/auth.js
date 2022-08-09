@@ -91,7 +91,12 @@ const verify = (req, res) => {
   res.status(200).json({
     status: 'success',
     data: {
-      user: req.user.dataValues,
+      studentId: req.user.dataValues.studentId,
+      major: req.user.dataValues.major,
+      name: req.user.dataValues.name,
+      role: req.user.dataValues.role,
+      degree: req.user.dataValues.degree,
+      isCheckedIn: req.user.dataValues.isCheckedIn,
     },
   });
 };
