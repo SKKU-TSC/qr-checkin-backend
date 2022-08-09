@@ -95,7 +95,7 @@ const verify = (req, res) => {
       },
     });
   } catch (error) {
-    res.status(200).json({ status: 'fail', message: "User isn't logged in." });
+    res.status(401).json({ status: 'fail', message: "User isn't logged in." });
   }
 };
 
