@@ -18,10 +18,13 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('users', 'isCheckedIn', {
-      type: Sequelize.DataTypes.BOOLEAN,
-      default: false,
+    await queryInterface.addColumn('users', 'comment', {
+      type: Sequelize.DataTypes.STRING,
+      validate: {
+        max: 15,
+      },
     });
+    await queryInterface.removeColumn('users', 'isCheckedIn');
   },
   down: async (queryInterface, Sequelize) => {},
 };

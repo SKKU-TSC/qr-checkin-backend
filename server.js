@@ -75,8 +75,10 @@ app.get('/', (req, res) => {
 
 //라우팅
 const authRouter = require('./routes/auth');
+const userRouter = require('./routes/user');
 
 app.use('/auth', authRouter);
+app.use('/users', userRouter);
 
 //404
 app.all('*', (req, res, next) => {

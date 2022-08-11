@@ -36,10 +36,11 @@ class User extends Sequelize.Model {
             isIn: [['학사', '석사', '박사', 'admin']],
           },
         },
-        isCheckedIn: {
-          type: Sequelize.DataTypes.BOOLEAN,
-          allowNull: false,
-          default: false,
+        comment: {
+          type: Sequelize.DataTypes.STRING,
+          validate: {
+            max: 15,
+          },
         },
       },
       {
