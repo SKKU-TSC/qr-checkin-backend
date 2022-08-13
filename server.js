@@ -52,7 +52,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 if (process.env.NODE_ENV === 'production') {
-  app.enable('trust proxy'); //proxy적용시
+  //app.enable('trust proxy'); //proxy적용시
   app.use(helmet({ contentSecurityPolicy: false })); //요청응답 관련 보안
   app.use(hpp());
 }
@@ -84,8 +84,6 @@ app.use('/users', userRouter);
 app.all('*', (req, res, next) => {
   res.status(404).json({ status: 'fail', message: '404 Not Found' });
 });
-
-// 웹소켓 강동헌
 
 const server = http.createServer(app);
 const io = new Server(server, {
