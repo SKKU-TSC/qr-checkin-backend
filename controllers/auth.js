@@ -31,6 +31,7 @@ const verify = (req, res) => {
         name: req.user.dataValues.name,
         role: req.user.dataValues.role,
         degree: req.user.dataValues.degree,
+        comment: req.user.dataValues.comment,
         isCheckedIn: req.user.dataValues.isCheckedIn,
       },
     });
