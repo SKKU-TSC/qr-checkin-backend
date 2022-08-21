@@ -2,6 +2,7 @@ const textToSpeech = require('@google-cloud/text-to-speech');
 const User = require('../models/user');
 
 const client = new textToSpeech.TextToSpeechClient();
+const ENGLISH = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
 function presentationSocket(socketIo) {
   socketIo.on('connection', (socket) => {
@@ -11,7 +12,8 @@ function presentationSocket(socketIo) {
         const ttsRequest = {
           input: { text: `${user.name}, ${user.major}` },
           voice: {
-            languageCode: 'ko-KR',
+            languageCode:
+              ENGLISH.indexOf(user.name) !== -1 ? 'en - GB' : 'ko-KR',
           },
           audioConfig: {
             audioEncoding: 'LINEAR16',
