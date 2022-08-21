@@ -10,10 +10,15 @@ function presentationSocket(socketIo) {
       const user = await User.findOne({ where: { studentId: studentId } });
       if (user) {
         const ttsRequest = {
-          input: { text: `${user.name}, ${user.major}` },
+          input: {
+            text: `${
+              ENGLISH.includes(user.name[0])
+                ? user.name.toLowerCase()
+                : user.name
+            }, ${user.major}`,
+          },
           voice: {
-            languageCode:
-              ENGLISH.indexOf(user.name) !== -1 ? 'en - GB' : 'ko-KR',
+            languageCode: `ko-KR`,
           },
           audioConfig: {
             audioEncoding: 'LINEAR16',
