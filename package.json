@@ -5,7 +5,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production PORT=8000 node server",
     "dev": "nodemon server",
-    "test": "test"
+    "test": "cross-env NODE_ENV=test PORT=8000 node server"
   },
   "author": "",
   "license": "ISC",

@@ -28,6 +28,21 @@ const serializeUsers = () => {
   }
 };
 
+const fillZeros = () => {
+  try {
+    User.findAll().then((users) =>
+      users.forEach(async (user) => {
+        if (user.password.length < 6 && user.role === 'client') {
+          user.password = user.password.padStart(6, '0');
+          user.save();
+        }
+      })
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const ENGLISH = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
 const findOutEnglishUsernames = () => {
@@ -50,4 +65,4 @@ const findOutEnglishUsernames = () => {
   }
 };
 
-findOutEnglishUsernames();
+serializeUsers();

@@ -98,8 +98,14 @@ const io = new Server(server, {
 });
 
 const presentationSocket = require('./socket/presentationSocket');
+const testSocket = require('./socket/testSocket');
 
-presentationSocket(io);
+if (process.env.NODE_ENV === 'test') {
+  console.log('테스트 서버 시작');
+  testSocket(io);
+} else {
+  presentationSocket(io);
+}
 
 server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
