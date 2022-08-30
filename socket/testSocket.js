@@ -28,10 +28,10 @@ const logic = async (user, socketIo) => {
 };
 
 function testSocket(socketIo) {
-  socketIo.on('connect', (socket) => {
+  socketIo.on('connect', () => {
     User.findAll().then((users) =>
       users.forEach((user) => {
-        setTimeout(() => logic(user, socketIo), 10000);
+        setTimeout(() => logic(user, socketIo), 2000);
       })
     );
   });
